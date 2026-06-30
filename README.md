@@ -1,5 +1,8 @@
 # ARS-SoftwareEngineering
 Progetto di Ingegneria del Software: Sistema di Gestione Ristorante
+
+<img width="1536" height="1024" alt="PHOTO-2026-06-30-16-53-32 (1)" src="https://github.com/user-attachments/assets/1614c1af-5740-4b04-a886-103d07310ec8" />
+
 # Sistema di Gestione per Ristorante
 
 Progetto realizzato per il corso di **Programmazione a Oggetti e Ingegneria del Software**.
