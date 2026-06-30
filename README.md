@@ -31,6 +31,6 @@ Il progetto è sviluppato seguendo il **Unified Process (UP)**, adottando un app
 
 ## Gruppo di lavoro
 
-* Abdelazim Sheruk
+* Abdelazim Sherouk
 * Elbadry Rahma
 * Ibrahim Ammar
