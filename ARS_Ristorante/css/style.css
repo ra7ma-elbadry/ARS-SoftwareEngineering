@@ -1,0 +1,151 @@
+.root {
+    -fx-background-color: #f7f3ed;
+    -fx-font-family: "Arial";
+}
+
+/* TITOLI */
+.label {
+    -fx-text-fill: #2f2f2f;
+}
+
+.title-label {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c2c2c;
+}
+
+.subtitle-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4a4a4a;
+}
+
+/* BOTTONI GENERICI */
+.button {
+    -fx-background-color: #2f4858;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #3d6275;
+}
+
+.button:pressed {
+    -fx-background-color: #223642;
+}
+
+/* BOTTONI IMPORTANTI */
+.primary-button {
+    -fx-background-color: #8b5e34;
+    -fx-text-fill: white;
+}
+
+.primary-button:hover {
+    -fx-background-color: #a77342;
+}
+
+.danger-button {
+    -fx-background-color: #9b2c2c;
+    -fx-text-fill: white;
+}
+
+.danger-button:hover {
+    -fx-background-color: #b63a3a;
+}
+
+/* CAMPI INPUT */
+.text-field,
+.password-field,
+.combo-box {
+    -fx-background-radius: 7;
+    -fx-border-radius: 7;
+    -fx-border-color: #d0c7bb;
+    -fx-background-color: white;
+    -fx-padding: 6;
+}
+
+/* TABELLE */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #d0c7bb;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #2f4858;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: #2f4858;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #d8c3a5;
+}
+
+/* LISTE */
+.list-view {
+    -fx-background-color: white;
+    -fx-border-color: #d0c7bb;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+/* BOX / CARD */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: #e0d7cc;
+    -fx-padding: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0, 0, 4);
+}
+
+.secondary-button {
+    -fx-background-color: #d9d2c7;
+    -fx-text-fill: #2f2f2f;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #c9beb0;
+}
+
+
+.form-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5a4a3f;
+}
+
+.text-field:focused,
+.combo-box:focused {
+    -fx-border-color: #8b5e34;
+    -fx-border-width: 2;
+}
+
+.table-view {
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-row-cell {
+    -fx-background-color: white;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #fbf8f4;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #f0e4d7;
+}
