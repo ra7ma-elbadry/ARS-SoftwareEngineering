@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="700.0" prefWidth="900.0"
+            stylesheets="@../css/style.css"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.GestioneSalaEventiController">
+
+    <children>
+        <VBox spacing="15" alignment="TOP_CENTER"
+              AnchorPane.topAnchor="20"
+              AnchorPane.leftAnchor="20"
+              AnchorPane.rightAnchor="20"
+              AnchorPane.bottomAnchor="20">
+
+            <Label text="Gestione Sala Eventi" styleClass="title-label" />
+
+            <TableView fx:id="prenotazioniTable" prefHeight="360">
+                <columns>
+                    <TableColumn fx:id="clienteColumn" text="Cliente" prefWidth="150"/>
+                    <TableColumn fx:id="salaColumn" text="Sala" prefWidth="120"/>
+                    <TableColumn fx:id="dataColumn" text="Data" prefWidth="160"/>
+                    <TableColumn fx:id="partecipantiColumn" text="Partecipanti" prefWidth="160"/>
+                    <TableColumn fx:id="statoColumn" text="Stato" prefWidth="160"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="12" alignment="CENTER">
+                <TextField fx:id="clienteField" promptText="ID Cliente" prefWidth="140"/>
+                <ComboBox fx:id="salaComboBox" promptText="Sala" prefWidth="120"/>
+                <DatePicker fx:id="dataPicker" prefWidth="150"/>
+                <TextField fx:id="partecipantiField" promptText="Partecipanti" prefWidth="140"/>
+            </HBox>
+
+            <HBox spacing="15" alignment="CENTER">
+                <Button fx:id="aggiungiButton" text="Prenota"
+                        onAction="#aggiungiPrenotazione"
+                        styleClass="primary-button"/>
+
+                <Button fx:id="modificaButton" text="Modifica"
+                        onAction="#modificaPrenotazione"
+                        styleClass="button"/>
+
+                <Button fx:id="eliminaButton" text="Elimina"
+                        onAction="#eliminaPrenotazione"
+                        styleClass="danger-button"/>
+                        
+                       <Button fx:id="indietroButton" text="Indietro"
+        onAction="#tornaHome"
+        styleClass="button"/> 
+            </HBox>
+
+        </VBox>
+    </children>
+</AnchorPane>
