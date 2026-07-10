@@ -5,15 +5,71 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomeManagerController">
-   <children>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="18.0" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-         <children>
-            <Label styleClass="title-label" text="Home Manager" />
-            <Label styleClass="subtitle-label" text="Benvenuto Manager" />
-            <Button fx:id="gestioneMenuButton" mnemonicParsing="false" onAction="#apriGestioneMenu" prefHeight="45.0" prefWidth="220.0" styleClass="primary-button" text="Gestione Menu" />
-            <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#logout" prefHeight="40.0" prefWidth="200.0" styleClass="secondary-button" text="Logout" />
-         </children>
-      </VBox>
-   </children>
+<AnchorPane
+        maxHeight="-Infinity"
+        maxWidth="-Infinity"
+        minHeight="-Infinity"
+        minWidth="-Infinity"
+        prefHeight="400.0"
+        prefWidth="600.0"
+        stylesheets="@../css/style.css"
+        xmlns="http://javafx.com/javafx/25"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="controller.HomeManagerController">
+
+    <children>
+
+        <VBox
+                alignment="CENTER"
+                prefHeight="200.0"
+                prefWidth="100.0"
+                spacing="18.0"
+                AnchorPane.bottomAnchor="10.0"
+                AnchorPane.leftAnchor="10.0"
+                AnchorPane.rightAnchor="10.0"
+                AnchorPane.topAnchor="10.0">
+
+            <children>
+
+                <Label
+                        styleClass="title-label"
+                        text="Home Manager" />
+
+                <Label
+                        styleClass="subtitle-label"
+                        text="Benvenuto Manager" />
+
+                <Button
+                        fx:id="gestioneMenuButton"
+                        mnemonicParsing="false"
+                        onAction="#apriGestioneMenu"
+                        prefHeight="45.0"
+                        prefWidth="220.0"
+                        styleClass="primary-button"
+                        text="Gestione Menu" />
+
+                <Button
+                        fx:id="gestioneSalaEventiButton"
+                        mnemonicParsing="false"
+                        onAction="#apriGestioneSalaEventi"
+                        prefHeight="45.0"
+                        prefWidth="220.0"
+                        styleClass="primary-button"
+                        text="Gestione Sala Eventi" />
+
+                <Button
+                        fx:id="logoutButton"
+                        mnemonicParsing="false"
+                        onAction="#logout"
+                        prefHeight="45.0"
+                        prefWidth="220.0"
+                        styleClass="secondary-button"
+                        text="Logout" />
+
+            </children>
+
+        </VBox>
+
+    </children>
+
 </AnchorPane>
