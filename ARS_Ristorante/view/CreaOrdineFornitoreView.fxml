@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity"
+            maxWidth="-Infinity"
+            minHeight="-Infinity"
+            minWidth="-Infinity"
+            prefHeight="720.0"
+            prefWidth="900.0"
+            stylesheets="@../css/style.css"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.CreaOrdineFornitoreController">
+
+    <children>
+
+        <VBox alignment="TOP_CENTER"
+              spacing="10.0"
+              styleClass="card"
+              stylesheets="@../css/style.css"
+              AnchorPane.bottomAnchor="10.0"
+              AnchorPane.leftAnchor="10.0"
+              AnchorPane.rightAnchor="10.0"
+              AnchorPane.topAnchor="10.0">
+
+            <children>
+
+                <Label styleClass="title-label"
+                       text="Crea Ordine Fornitore" />
+
+                <Label fx:id="fornitoreLabel"
+                       styleClass="subtitle-label"
+                       text="Fornitore selezionato" />
+
+                <Label text="Nuovo ordine" />
+
+                <TableView fx:id="tabellaDettagli"
+                           maxHeight="160.0"
+                           minHeight="160.0"
+                           prefHeight="160.0"
+                           prefWidth="760.0">
+                    <columns>
+                        <TableColumn fx:id="colProdotto"
+                                     prefWidth="250.0"
+                                     text="ID Prodotto" />
+
+                        <TableColumn fx:id="colQuantita"
+                                     prefWidth="250.0"
+                                     text="Quantità" />
+
+                        <TableColumn fx:id="colPrezzoUnitario"
+                                     prefWidth="250.0"
+                                     text="Prezzo Unitario" />
+                    </columns>
+                </TableView>
+
+                <HBox alignment="CENTER" spacing="12.0">
+                    <children>
+
+                        <ComboBox fx:id="prodottoComboBox"
+                                  prefHeight="40.0"
+                                  prefWidth="230.0"
+                                  promptText="Seleziona prodotto" />
+
+                        <TextField fx:id="quantitaField"
+                                   prefHeight="40.0"
+                                   prefWidth="160.0"
+                                   promptText="Quantità" />
+
+                        <TextField fx:id="prezzoUnitarioField"
+                                   prefHeight="40.0"
+                                   prefWidth="160.0"
+                                   promptText="Prezzo unitario" />
+
+                    </children>
+                </HBox>
+
+                <HBox alignment="CENTER" spacing="12.0">
+                    <children>
+
+                        <Button mnemonicParsing="false"
+                                onAction="#aggiungiDettaglio"
+                                prefHeight="36.0"
+                                prefWidth="180.0"
+                                styleClass="primary-button"
+                                text="Aggiungi all'ordine" />
+
+                        <Button mnemonicParsing="false"
+                                onAction="#inviaOrdine"
+                                prefHeight="36.0"
+                                prefWidth="160.0"
+                                styleClass="primary-button"
+                                text="Invia Ordine" />
+
+                        <Button mnemonicParsing="false"
+                                onAction="#tornaGestioneMagazzino"
+                                prefHeight="36.0"
+                                prefWidth="150.0"
+                                styleClass="secondary-button"
+                                text="Indietro" />
+
+                    </children>
+                </HBox>
+
+                <Label text="Ordini inviati al fornitore" />
+
+                <TableView fx:id="tabellaOrdiniInviati"
+                           maxHeight="190.0"
+                           minHeight="190.0"
+                           prefHeight="190.0"
+                           prefWidth="820.0">
+                    <columns>
+                        <TableColumn fx:id="colIdOrdineInviato"
+                                     prefWidth="90.0"
+                                     text="ID Ordine" />
+
+                        <TableColumn fx:id="colDataOrdineInviato"
+                                     prefWidth="130.0"
+                                     text="Data" />
+
+                        <TableColumn fx:id="colStatoOrdineInviato"
+                                     prefWidth="110.0"
+                                     text="Stato" />
+
+                        <TableColumn fx:id="colProdottoOrdineInviato"
+                                     prefWidth="210.0"
+                                     text="Prodotto" />
+
+                        <TableColumn fx:id="colQuantitaOrdineInviato"
+                                     prefWidth="120.0"
+                                     text="Quantità" />
+
+                        <TableColumn fx:id="colPrezzoOrdineInviato"
+                                     prefWidth="140.0"
+                                     text="Prezzo Unitario" />
+                    </columns>
+                </TableView>
+
+            </children>
+        </VBox>
+
+    </children>
+</AnchorPane>

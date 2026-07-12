@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity"
+            maxWidth="-Infinity"
+            minHeight="-Infinity"
+            minWidth="-Infinity"
+            prefHeight="720.0"
+            prefWidth="900.0"
+            stylesheets="@../css/style.css"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.GestioneMagazzinoController">
+
+    <children>
+
+        <VBox alignment="TOP_CENTER"
+              layoutX="4.0"
+              layoutY="6.0"
+              maxWidth="900.0"
+              prefHeight="708.0"
+              prefWidth="887.0"
+              spacing="10.0"
+              styleClass="card"
+              stylesheets="@../css/style.css"
+              AnchorPane.bottomAnchor="10.0"
+              AnchorPane.leftAnchor="10.0"
+              AnchorPane.rightAnchor="10.0"
+              AnchorPane.topAnchor="10.0">
+
+            <children>
+
+                <Label contentDisplay="CENTER"
+                       styleClass="title-label"
+                       text="Gestione Magazzino e Fornitori" />
+
+                <Label styleClass="subtitle-label"
+                       text="Visualizza e aggiorna prodotti e fornitori" />
+
+                <TabPane maxHeight="430.0"
+                         maxWidth="1.7976931348623157E308"
+                         prefHeight="430.0"
+                         prefWidth="820.0"
+                         tabClosingPolicy="UNAVAILABLE">
+
+                    <tabs>
+
+                        <Tab text="Prodotti Magazzino">
+                            <content>
+                                <VBox alignment="TOP_CENTER" spacing="10.0">
+
+                                    <children>
+
+                                        <TableView fx:id="tabellaProdotti"
+                                                   maxHeight="260.0"
+                                                   minHeight="260.0"
+                                                   prefHeight="260.0"
+                                                   prefWidth="820.0">
+                                            <columns>
+                                                <TableColumn fx:id="colIdProdotto" text="ID" prefWidth="60.0" />
+                                                <TableColumn fx:id="colNomeProdotto" text="Nome" prefWidth="150.0" />
+                                                <TableColumn fx:id="colDescrizioneProdotto" text="Descrizione" prefWidth="250.0" />
+                                                <TableColumn fx:id="colQuantitaProdotto" text="Quantità" prefWidth="110.0" />
+                                                <TableColumn fx:id="colUnitaMisuraProdotto" text="Unità" prefWidth="100.0" />
+                                                <TableColumn fx:id="colSogliaMinimaProdotto" text="Soglia Minima" prefWidth="140.0" />
+                                            </columns>
+                                        </TableView>
+
+                                        <Label text="Aggiungi o modifica prodotto" />
+
+                                        <GridPane hgap="10.0" vgap="10.0">
+                                            <children>
+
+                                                <TextField fx:id="nomeProdottoField"
+                                                           promptText="Nome prodotto"
+                                                           prefHeight="40.0"
+                                                           prefWidth="220.0"
+                                                           GridPane.columnIndex="0"
+                                                           GridPane.rowIndex="0" />
+
+                                                <TextField fx:id="descrizioneProdottoField"
+                                                           promptText="Descrizione"
+                                                           prefHeight="40.0"
+                                                           prefWidth="220.0"
+                                                           GridPane.columnIndex="1"
+                                                           GridPane.rowIndex="0" />
+
+                                                <TextField fx:id="quantitaProdottoField"
+                                                           promptText="Quantità"
+                                                           prefHeight="40.0"
+                                                           prefWidth="160.0"
+                                                           GridPane.columnIndex="0"
+                                                           GridPane.rowIndex="1" />
+
+                                                <TextField fx:id="unitaMisuraProdottoField"
+                                                           promptText="Unità misura"
+                                                           prefHeight="40.0"
+                                                           prefWidth="160.0"
+                                                           GridPane.columnIndex="1"
+                                                           GridPane.rowIndex="1" />
+
+                                                <TextField fx:id="sogliaMinimaProdottoField"
+                                                           promptText="Soglia minima"
+                                                           prefHeight="40.0"
+                                                           prefWidth="160.0"
+                                                           GridPane.columnIndex="2"
+                                                           GridPane.rowIndex="1" />
+
+                                            </children>
+                                        </GridPane>
+                               <HBox alignment="CENTER" spacing="12.0">
+    <children>
+        <Button mnemonicParsing="false"
+                onAction="#aggiungiProdotto"
+                prefHeight="36.0"
+                prefWidth="150.0"
+                styleClass="primary-button"
+                text="Aggiungi Prodotto" />
+
+        <Button mnemonicParsing="false"
+                onAction="#aggiornaProdotto"
+                prefHeight="36.0"
+                prefWidth="150.0"
+                styleClass="primary-button"
+                text="Aggiorna Prodotto" />
+
+        <Button mnemonicParsing="false"
+                onAction="#eliminaProdotto"
+                prefHeight="36.0"
+                prefWidth="150.0"
+                styleClass="danger-button"
+                text="Elimina Prodotto" />
+    </children>
+</HBox>
+
+                                    </children>
+                                </VBox>
+                            </content>
+                        </Tab>
+
+                        <Tab text="Fornitori">
+                            <content>
+                                <VBox alignment="TOP_CENTER" spacing="10.0">
+
+                                    <children>
+
+                                        <TableView fx:id="tabellaFornitori"
+                                                   maxHeight="260.0"
+                                                   minHeight="260.0"
+                                                   prefHeight="260.0"
+                                                   prefWidth="820.0">
+                                            <columns>
+                                                <TableColumn fx:id="colIdFornitore" text="ID" prefWidth="60.0" />
+                                                <TableColumn fx:id="colNomeFornitore" text="Nome" prefWidth="190.0" />
+                                                <TableColumn fx:id="colTelefonoFornitore" text="Telefono" prefWidth="150.0" />
+                                                <TableColumn fx:id="colEmailFornitore" text="Email" prefWidth="240.0" />
+                                                <TableColumn fx:id="colIndirizzoFornitore" text="Indirizzo" prefWidth="180.0" />
+                                            </columns>
+                                        </TableView>
+
+                                        <Label text="Aggiungi o modifica fornitore" />
+
+                                        <GridPane hgap="10.0" vgap="10.0">
+                                            <children>
+
+                                                <TextField fx:id="nomeFornitoreField"
+                                                           promptText="Nome fornitore"
+                                                           prefHeight="40.0"
+                                                           prefWidth="220.0"
+                                                           GridPane.columnIndex="0"
+                                                           GridPane.rowIndex="0" />
+
+                                                <TextField fx:id="telefonoFornitoreField"
+                                                           promptText="Telefono"
+                                                           prefHeight="40.0"
+                                                           prefWidth="180.0"
+                                                           GridPane.columnIndex="1"
+                                                           GridPane.rowIndex="0" />
+
+                                                <TextField fx:id="emailFornitoreField"
+                                                           promptText="Email"
+                                                           prefHeight="40.0"
+                                                           prefWidth="220.0"
+                                                           GridPane.columnIndex="0"
+                                                           GridPane.rowIndex="1" />
+
+                                                <TextField fx:id="indirizzoFornitoreField"
+                                                           promptText="Indirizzo"
+                                                           prefHeight="40.0"
+                                                           prefWidth="220.0"
+                                                           GridPane.columnIndex="1"
+                                                           GridPane.rowIndex="1" />
+
+                                            </children>
+                                        </GridPane>
+<HBox alignment="CENTER" spacing="12.0">
+    <children>
+        <Button mnemonicParsing="false"
+                onAction="#aggiungiFornitore"
+                prefHeight="36.0"
+                prefWidth="150.0"
+                styleClass="primary-button"
+                text="Aggiungi Fornitore" />
+
+        <Button mnemonicParsing="false"
+                onAction="#aggiornaFornitore"
+                prefHeight="36.0"
+                prefWidth="150.0"
+                styleClass="primary-button"
+                text="Aggiorna Fornitore" />
+
+        <Button mnemonicParsing="false"
+                onAction="#eliminaFornitore"
+                prefHeight="36.0"
+                prefWidth="150.0"
+                styleClass="danger-button"
+                text="Elimina Fornitore" />
+
+        <Button mnemonicParsing="false"
+                onAction="#creaOrdineFornitore"
+                prefHeight="36.0"
+                prefWidth="150.0"
+                styleClass="secondary-button"
+                text="Crea Ordine" />
+    </children>
+</HBox>          </children>
+                                </VBox>
+                            </content>
+                        </Tab>
+
+                    </tabs>
+                </TabPane>
+
+              <Button fx:id="indietroButton"
+        mnemonicParsing="false"
+        onAction="#tornaHomeManager"
+        prefHeight="20.0"
+        prefWidth="150.0"
+        styleClass="secondary-button"
+        text="Indietro" />
+            </children>
+        </VBox>
+
+    </children>
+</AnchorPane>
