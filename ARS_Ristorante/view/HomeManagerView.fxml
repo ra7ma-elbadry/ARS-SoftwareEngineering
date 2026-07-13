@@ -56,6 +56,16 @@
                         prefWidth="220.0"
                         styleClass="primary-button"
                         text="Gestione Sala Eventi" />
+                        
+               <Button
+                        fx:id="gestioneMagazzinoButton"
+                        mnemonicParsing="false"
+                        onAction="#apriGestioneMagazzino"
+                        prefHeight="45.0"
+                        prefWidth="220.0"
+                        styleClass="primary-button"
+                        text="Gestione Magazzino" />
+                
 
                 <Button
                         fx:id="logoutButton"

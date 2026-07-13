@@ -13,7 +13,10 @@ public class HomeManagerController {
 
     @FXML
     private Button gestioneMenuButton;
-
+    @FXML 
+    private Button gestioneSalaEventiButton;
+    @FXML
+    private Button gestioneMagazzinoButton;
     @FXML
     private Button logoutButton;
 
@@ -49,6 +52,40 @@ public class HomeManagerController {
 
         } catch (Exception e) {
             System.out.println("Errore durante il logout:");
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void apriGestioneSalaEventi() {
+        try {
+            File fileFXML = new File("view/GestioneSalaEventiView.fxml");
+            Parent root = FXMLLoader.load(fileFXML.toURI().toURL());
+
+            Stage stage = (Stage) gestioneSalaEventiButton.getScene().getWindow();
+            Scene scene = new Scene(root);
+
+            stage.setScene(scene);
+            stage.setTitle("ARS Ristorante - Gestione Sala Eventi");
+
+        } catch (Exception e) {
+            System.out.println("Errore apertura Gestione Sala Eventi");
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void apriGestioneMagazzino() {
+        try {
+            File fileFXML = new File("view/GestioneMagazzinoView.fxml");
+            Parent root = FXMLLoader.load(fileFXML.toURI().toURL());
+
+            Stage stage = (Stage) gestioneMagazzinoButton.getScene().getWindow();
+            Scene scene = new Scene(root);
+
+            stage.setScene(scene);
+            stage.setTitle("ARS Ristorante - Gestione Magazzino");
+
+        } catch (Exception e) {
+            System.out.println("Errore apertura Gestione Magazzino");
             e.printStackTrace();
         }
     }
