@@ -27,6 +27,18 @@ L'applicazione consente di gestire:
 
 Il progetto è sviluppato seguendo il **Unified Process (UP)**, adottando un approccio iterativo e incrementale.
 
+##   Tecnologie Usate
+
+* Java
+* JavaFX
+* FXML
+* Scene Builder
+* SQLite
+* JDBC
+* DAO
+* MVC
+* CSS
+
 ##   Casi d'uso principali
 
 * Gestione ordinazioni
