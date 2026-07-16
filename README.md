@@ -7,7 +7,7 @@ https://canva.link/5ql2erfpr3133f2
 
 # Sistema di Gestione per Ristorante
 
-Progetto realizzato per il corso di **Programmazione a Oggetti e Ingegneria del Software**.
+Progetto realizzato per il corso di **Programmazione a Oggetti e Ingegneria del Software 2025/2026**.
 
 ## Descrizione
 
@@ -27,6 +27,12 @@ L'applicazione consente di gestire:
 
 Il progetto è sviluppato seguendo il **Unified Process (UP)**, adottando un approccio iterativo e incrementale.
 
+##   Casi d'uso principali
+
+* Gestione ordinazioni
+* Gestione magazzino e fornitori
+* Gestione sala eventi
+
 ##   Tecnologie Usate
 
 * Java
@@ -38,12 +44,6 @@ Il progetto è sviluppato seguendo il **Unified Process (UP)**, adottando un app
 * DAO
 * MVC
 * CSS
-
-##   Casi d'uso principali
-
-* Gestione ordinazioni
-* Gestione magazzino e fornitori
-* Gestione sala eventi
 
 ## Gruppo di lavoro
 
