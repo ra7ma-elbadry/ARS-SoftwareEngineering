@@ -1,7 +1,7 @@
 package test;
 
 import java.util.List;
-
+import dao.impl.TavoloDAOImpl;
 import dao.TavoloDAO;
 import model.StatoTavolo;
 import model.Tavolo;
@@ -9,7 +9,8 @@ import model.Tavolo;
 public class TestTavoloDAO {
 
     public static void main(String[] args) {
-        TavoloDAO dao = new TavoloDAO();
+    	TavoloDAO dao =
+    	        new TavoloDAOImpl();
 
         List<Tavolo> tavoli = dao.getAllTavoli();
         System.out.println("Numero tavoli trovati: " + tavoli.size());

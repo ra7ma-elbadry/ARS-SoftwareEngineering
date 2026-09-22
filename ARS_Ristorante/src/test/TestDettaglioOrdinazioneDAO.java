@@ -1,14 +1,14 @@
 package test;
 
 import java.util.List;
-
+import dao.impl.DettaglioOrdinazioneDAOImpl;
 import dao.DettaglioOrdinazioneDAO;
 import model.DettaglioOrdinazione;
 
 public class TestDettaglioOrdinazioneDAO {
 
     public static void main(String[] args) {
-        DettaglioOrdinazioneDAO dao = new DettaglioOrdinazioneDAO();
+    	DettaglioOrdinazioneDAO dao = new DettaglioOrdinazioneDAOImpl();
 
         int idOrdinazioneTest = 1;
 

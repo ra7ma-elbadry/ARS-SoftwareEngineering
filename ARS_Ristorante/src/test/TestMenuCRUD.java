@@ -1,7 +1,7 @@
 package test;
 
 import java.util.List;
-
+import dao.impl.MenuDAOImpl;
 import dao.MenuDAO;
 import model.CategoriaMenu;
 import model.Menu;
@@ -9,7 +9,8 @@ import model.Menu;
 public class TestMenuCRUD {
 
     public static void main(String[] args) {
-        MenuDAO dao = new MenuDAO();
+    	MenuDAO dao =
+    	        new MenuDAOImpl();
 
         // 1. Aggiunta nuovo piatto
         Menu nuovoPiatto = new Menu(

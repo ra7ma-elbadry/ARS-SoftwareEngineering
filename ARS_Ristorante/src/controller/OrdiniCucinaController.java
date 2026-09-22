@@ -3,8 +3,7 @@ package controller;
 import java.io.File;
 import java.util.List;
 
-import dao.DettaglioOrdinazioneDAO;
-import dao.OrdinazioneDAO;
+import facade.GestioneOrdinazioniFacade;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -49,99 +48,173 @@ public class OrdiniCucinaController {
     @FXML
     private Button indietroButton;
 
-    private OrdinazioneDAO ordinazioneDAO = new OrdinazioneDAO();
-    private DettaglioOrdinazioneDAO dettaglioDAO = new DettaglioOrdinazioneDAO();
+    /*
+     * Anche il controller della cucina
+     * usa la stessa Facade delle ordinazioni.
+     */
+    private GestioneOrdinazioniFacade facade =
+            new GestioneOrdinazioniFacade();
 
     @FXML
     private void initialize() {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("idOrdinazione"));
-        tavoloColumn.setCellValueFactory(new PropertyValueFactory<>("idTavolo"));
-        statoColumn.setCellValueFactory(new PropertyValueFactory<>("stato"));
-        totaleColumn.setCellValueFactory(new PropertyValueFactory<>("totale"));
+
+        idColumn.setCellValueFactory(
+                new PropertyValueFactory<>("idOrdinazione")
+        );
+
+        tavoloColumn.setCellValueFactory(
+                new PropertyValueFactory<>("idTavolo")
+        );
+
+        statoColumn.setCellValueFactory(
+                new PropertyValueFactory<>("stato")
+        );
+
+        totaleColumn.setCellValueFactory(
+                new PropertyValueFactory<>("totale")
+        );
 
         caricaOrdini();
 
-        ordiniTable.getSelectionModel().selectedItemProperty().addListener(
-                (observable, vecchioOrdine, nuovoOrdine) -> {
-                    if (nuovoOrdine != null) {
-                        caricaDettagliOrdine(nuovoOrdine);
-                    }
-                }
-        );
+        ordiniTable
+                .getSelectionModel()
+                .selectedItemProperty()
+                .addListener(
+                        (observable, vecchioOrdine, nuovoOrdine) -> {
+
+                            if (nuovoOrdine != null) {
+                                caricaDettagliOrdine(nuovoOrdine);
+                            }
+                        }
+                );
     }
 
     private void caricaOrdini() {
-        ObservableList<Ordinazione> ordini = FXCollections.observableArrayList(
-                ordinazioneDAO.getOrdinazioniPerCucina()
-        );
+
+        ObservableList<Ordinazione> ordini =
+                FXCollections.observableArrayList(
+                        facade.getOrdinazioniPerCucina()
+                );
 
         ordiniTable.setItems(ordini);
     }
 
-    private void caricaDettagliOrdine(Ordinazione ordinazione) {
+    private void caricaDettagliOrdine(
+            Ordinazione ordinazione) {
+
         dettagliListView.getItems().clear();
 
-        List<String> dettagli = dettaglioDAO.getDettagliConNomeProdotto(
-                ordinazione.getIdOrdinazione()
-        );
+        List<String> dettagli =
+                facade.getDettagliConNomeProdotto(
+                        ordinazione.getIdOrdinazione()
+                );
 
-        dettagliListView.getItems().addAll(dettagli);
+        dettagliListView
+                .getItems()
+                .addAll(dettagli);
     }
 
     @FXML
     private void mettiInPreparazione() {
-        Ordinazione ordineSelezionato = ordiniTable.getSelectionModel().getSelectedItem();
+
+        Ordinazione ordineSelezionato =
+                ordiniTable
+                        .getSelectionModel()
+                        .getSelectedItem();
 
         if (ordineSelezionato == null) {
-            System.out.println("Seleziona un ordine.");
+
+            System.out.println(
+                    "Seleziona un ordine."
+            );
+
             return;
         }
 
-        ordinazioneDAO.aggiornaStatoOrdinazione(
+        facade.aggiornaStatoOrdinazione(
                 ordineSelezionato.getIdOrdinazione(),
                 StatoOrdinazione.IN_PREPARAZIONE
         );
 
-        System.out.println("Ordine messo in preparazione.");
+        System.out.println(
+                "Ordine messo in preparazione."
+        );
 
         caricaOrdini();
-        dettagliListView.getItems().clear();
+
+        dettagliListView
+                .getItems()
+                .clear();
     }
 
     @FXML
     private void mettiPronto() {
-        Ordinazione ordineSelezionato = ordiniTable.getSelectionModel().getSelectedItem();
+
+        Ordinazione ordineSelezionato =
+                ordiniTable
+                        .getSelectionModel()
+                        .getSelectedItem();
 
         if (ordineSelezionato == null) {
-            System.out.println("Seleziona un ordine.");
+
+            System.out.println(
+                    "Seleziona un ordine."
+            );
+
             return;
         }
 
-        ordinazioneDAO.aggiornaStatoOrdinazione(
+        facade.aggiornaStatoOrdinazione(
                 ordineSelezionato.getIdOrdinazione(),
                 StatoOrdinazione.PRONTO
         );
 
-        System.out.println("Ordine pronto.");
+        System.out.println(
+                "Ordine pronto."
+        );
 
         caricaOrdini();
-        dettagliListView.getItems().clear();
+
+        dettagliListView
+                .getItems()
+                .clear();
     }
 
     @FXML
     private void tornaHome() {
-        try {
-            File fileFXML = new File("view/HomeCuocoView.fxml");
-            Parent root = FXMLLoader.load(fileFXML.toURI().toURL());
 
-            Stage stage = (Stage) indietroButton.getScene().getWindow();
-            Scene scene = new Scene(root);
+        try {
+
+            File fileFXML =
+                    new File(
+                            "view/HomeCuocoView.fxml"
+                    );
+
+            Parent root =
+                    FXMLLoader.load(
+                            fileFXML.toURI().toURL()
+                    );
+
+            Stage stage =
+                    (Stage) indietroButton
+                            .getScene()
+                            .getWindow();
+
+            Scene scene =
+                    new Scene(root);
 
             stage.setScene(scene);
-            stage.setTitle("ARS Ristorante - Home Cuoco");
+
+            stage.setTitle(
+                    "ARS Ristorante - Home Cuoco"
+            );
 
         } catch (Exception e) {
-            System.out.println("Errore ritorno alla Home Cuoco:");
+
+            System.out.println(
+                    "Errore ritorno alla Home Cuoco:"
+            );
+
             e.printStackTrace();
         }
     }

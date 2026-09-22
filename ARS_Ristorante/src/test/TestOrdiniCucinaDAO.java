@@ -1,7 +1,7 @@
 package test;
 
 import java.util.List;
-
+import dao.impl.OrdinazioneDAOImpl;
 import dao.OrdinazioneDAO;
 import model.Ordinazione;
 import model.StatoOrdinazione;
@@ -9,7 +9,8 @@ import model.StatoOrdinazione;
 public class TestOrdiniCucinaDAO {
 
     public static void main(String[] args) {
-        OrdinazioneDAO dao = new OrdinazioneDAO();
+    	OrdinazioneDAO dao =
+    	        new OrdinazioneDAOImpl();
 
         List<Ordinazione> ordiniCucina = dao.getOrdinazioniPerCucina();
 

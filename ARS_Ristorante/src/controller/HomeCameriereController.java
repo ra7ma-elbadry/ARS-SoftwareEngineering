@@ -1,7 +1,7 @@
 package controller;
 
 import java.io.File;
-
+import application.SessioneUtente;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -37,6 +37,7 @@ public class HomeCameriereController {
 
     @FXML
     private void logout() {
+    	SessioneUtente.getInstance().logout();
         try {
             File fileFXML = new File("view/LoginView.fxml");
             Parent root = FXMLLoader.load(fileFXML.toURI().toURL());

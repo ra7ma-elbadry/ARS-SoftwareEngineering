@@ -1,14 +1,15 @@
 package test;
 
 import java.util.List;
-
+import dao.impl.MenuDAOImpl;
 import dao.MenuDAO;
 import model.Menu;
 
 public class TestMenuDAO {
 
     public static void main(String[] args) {
-        MenuDAO dao = new MenuDAO();
+    	MenuDAO dao =
+    	        new MenuDAOImpl();
 
         List<Menu> menuCompleto = dao.getAllMenu();
         System.out.println("Numero piatti nel menu: " + menuCompleto.size());
