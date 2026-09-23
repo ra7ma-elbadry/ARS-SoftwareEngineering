@@ -3,12 +3,13 @@ package test;
 import java.util.List;
 
 import dao.PrenotazioneEventoDAO;
+import dao.impl.PrenotazioneEventoDAOImpl;
 import model.PrenotazioneEvento;
 
 public class TestPrenotazioneEventoCRUD {
 
     public static void main(String[] args) {
-        PrenotazioneEventoDAO dao = new PrenotazioneEventoDAO();
+        PrenotazioneEventoDAO dao = new PrenotazioneEventoDAOImpl();
 
         // 1. Creazione prenotazione test
         PrenotazioneEvento nuovaPrenotazione = new PrenotazioneEvento(

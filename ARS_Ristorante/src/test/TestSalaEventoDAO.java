@@ -3,12 +3,13 @@ package test;
 import java.util.List;
 
 import dao.SalaEventoDAO;
+import dao.impl.SalaEventoDAOImpl;
 import model.SalaEvento;
 
 public class TestSalaEventoDAO {
 
     public static void main(String[] args) {
-        SalaEventoDAO dao = new SalaEventoDAO();
+        SalaEventoDAO dao = new SalaEventoDAOImpl();
 
         List<SalaEvento> sale = dao.getTutteSale();
 

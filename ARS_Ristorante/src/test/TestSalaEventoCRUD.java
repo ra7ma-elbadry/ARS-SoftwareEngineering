@@ -3,12 +3,13 @@ package test;
 import java.util.List;
 
 import dao.SalaEventoDAO;
+import dao.impl.SalaEventoDAOImpl;
 import model.SalaEvento;
 
 public class TestSalaEventoCRUD {
 
     public static void main(String[] args) {
-        SalaEventoDAO dao = new SalaEventoDAO();
+        SalaEventoDAO dao = new SalaEventoDAOImpl();
 
         // 1. Aggiunta sala evento
         SalaEvento nuovaSala = new SalaEvento(
