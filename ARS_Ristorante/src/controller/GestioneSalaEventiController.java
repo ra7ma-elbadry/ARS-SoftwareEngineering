@@ -2,7 +2,8 @@ package controller;
 
 import java.io.File;
 
-import dao.PrenotazioneEventoDAO;
+import application.SessioneUtente;
+import facade.GestioneSalaEventiFacade;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,12 +20,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.PrenotazioneEvento;
+import model.SalaEvento;
 
 public class GestioneSalaEventiController {
 
-	@FXML
-	private Button indietroButton;
-	
+    @FXML
+    private Button indietroButton;
+
     @FXML
     private TableView<PrenotazioneEvento> prenotazioniTable;
 
@@ -64,139 +66,408 @@ public class GestioneSalaEventiController {
     @FXML
     private Button eliminaButton;
 
-    private PrenotazioneEventoDAO prenotazioneDAO = new PrenotazioneEventoDAO();
+
+    /*
+     * Il Controller non accede direttamente ai DAO.
+     * Comunica solamente con la Facade.
+     */
+    private GestioneSalaEventiFacade facade =
+            new GestioneSalaEventiFacade();
+
 
     @FXML
     public void initialize() {
-        clienteColumn.setCellValueFactory(new PropertyValueFactory<>("idCliente"));
-        salaColumn.setCellValueFactory(new PropertyValueFactory<>("idSala"));
-        dataColumn.setCellValueFactory(new PropertyValueFactory<>("dataEvento"));
-        partecipantiColumn.setCellValueFactory(new PropertyValueFactory<>("numeroPartecipanti"));
-        statoColumn.setCellValueFactory(new PropertyValueFactory<>("stato"));
 
-        salaComboBox.getItems().addAll("1", "2");
-
-        caricaPrenotazioni();
-        prenotazioniTable.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, nuovaPrenotazione) -> {
-                    if (nuovaPrenotazione != null) {
-                        clienteField.setText(String.valueOf(nuovaPrenotazione.getIdCliente()));
-                        salaComboBox.setValue(String.valueOf(nuovaPrenotazione.getIdSala()));
-                        dataPicker.setValue(java.time.LocalDate.parse(nuovaPrenotazione.getDataEvento()));
-                        partecipantiField.setText(String.valueOf(nuovaPrenotazione.getNumeroPartecipanti()));
-                    }
-                }
+        clienteColumn.setCellValueFactory(
+                new PropertyValueFactory<>("idCliente")
         );
+
+        salaColumn.setCellValueFactory(
+                new PropertyValueFactory<>("idSala")
+        );
+
+        dataColumn.setCellValueFactory(
+                new PropertyValueFactory<>("dataEvento")
+        );
+
+        partecipantiColumn.setCellValueFactory(
+                new PropertyValueFactory<>("numeroPartecipanti")
+        );
+
+        statoColumn.setCellValueFactory(
+                new PropertyValueFactory<>("stato")
+        );
+
+        caricaSale();
+        caricaPrenotazioni();
+
+        prenotazioniTable
+                .getSelectionModel()
+                .selectedItemProperty()
+                .addListener(
+                        (observable, oldValue, nuovaPrenotazione) -> {
+
+                            if (nuovaPrenotazione != null) {
+
+                                clienteField.setText(
+                                        String.valueOf(
+                                                nuovaPrenotazione.getIdCliente()
+                                        )
+                                );
+
+                                salaComboBox.setValue(
+                                        String.valueOf(
+                                                nuovaPrenotazione.getIdSala()
+                                        )
+                                );
+
+                                dataPicker.setValue(
+                                        java.time.LocalDate.parse(
+                                                nuovaPrenotazione.getDataEvento()
+                                        )
+                                );
+
+                                partecipantiField.setText(
+                                        String.valueOf(
+                                                nuovaPrenotazione
+                                                        .getNumeroPartecipanti()
+                                        )
+                                );
+                            }
+                        }
+                );
     }
 
+
     private void caricaPrenotazioni() {
+
         ObservableList<PrenotazioneEvento> lista =
-                FXCollections.observableArrayList(prenotazioneDAO.getTuttePrenotazioni());
+                FXCollections.observableArrayList(
+                        facade.getTuttePrenotazioni()
+                );
 
         prenotazioniTable.setItems(lista);
     }
 
+
+    private void caricaSale() {
+
+        salaComboBox.getItems().clear();
+
+        for (SalaEvento sala : facade.getSaleDisponibili()) {
+
+            salaComboBox.getItems().add(
+                    String.valueOf(sala.getIdSala())
+            );
+        }
+    }
+
+
     @FXML
     private void aggiungiPrenotazione() {
-    	if (clienteField.getText().isEmpty()
-    	        || salaComboBox.getValue() == null
-    	        || dataPicker.getValue() == null
-    	        || partecipantiField.getText().isEmpty()) {
 
-    	    mostraAlert("Attenzione", "Compila tutti i campi.");
-    	    return;
-    	}
-    	
-    	PrenotazioneEvento prenotazione = new PrenotazioneEvento();
+        if (clienteField.getText().isEmpty()
+                || salaComboBox.getValue() == null
+                || dataPicker.getValue() == null
+                || partecipantiField.getText().isEmpty()) {
 
-    	prenotazione.setIdCliente(Integer.parseInt(clienteField.getText()));
-    	prenotazione.setIdSala(Integer.parseInt(salaComboBox.getValue()));
-    	prenotazione.setNumeroPartecipanti(Integer.parseInt(partecipantiField.getText()));
-    	prenotazione.setDataEvento(dataPicker.getValue().toString());
+            mostraAlert(
+                    "Attenzione",
+                    "Compila tutti i campi."
+            );
 
-    	boolean disponibile = prenotazioneDAO.salaDisponibile(
-    	        prenotazione.getIdSala(),
-    	        prenotazione.getDataEvento(),
-    	        "19:00",
-    	        "22:00"
-    	);
+            return;
+        }
 
-    	if (!disponibile) {
-    		mostraAlert("Prenotazione", "La sala è già prenotata in questa data.");
-    	  return;
-    	}
+        int idCliente;
+        int numeroPartecipanti;
 
-        prenotazione.setIdManager(3);
+        try {
+
+            idCliente =
+                    Integer.parseInt(
+                            clienteField.getText()
+                    );
+
+            numeroPartecipanti =
+                    Integer.parseInt(
+                            partecipantiField.getText()
+                    );
+
+        } catch (NumberFormatException e) {
+
+            mostraAlert(
+                    "Attenzione",
+                    "Inserisci valori numerici validi."
+            );
+
+            return;
+        }
+
+
+        int idManager =
+                SessioneUtente
+                        .getInstance()
+                        .getIdUtente();
+
+        if (idManager == -1) {
+
+            mostraAlert(
+                    "Errore",
+                    "Nessun manager autenticato."
+            );
+
+            return;
+        }
+
+
+        PrenotazioneEvento prenotazione =
+                new PrenotazioneEvento();
+
+        prenotazione.setIdCliente(idCliente);
+
+        prenotazione.setIdSala(
+                Integer.parseInt(
+                        salaComboBox.getValue()
+                )
+        );
+
+        prenotazione.setIdManager(idManager);
+
+        prenotazione.setDataEvento(
+                dataPicker.getValue().toString()
+        );
+
         prenotazione.setOraInizio("19:00");
         prenotazione.setOraFine("23:00");
+
+        prenotazione.setNumeroPartecipanti(
+                numeroPartecipanti
+        );
+
         prenotazione.setStato("CONFERMATA");
         prenotazione.setNote("");
 
-        prenotazioneDAO.salvaPrenotazione(prenotazione);
 
-        System.out.println("Prenotazione evento salvata.");
+        boolean risultato =
+                facade.aggiungiPrenotazione(
+                        prenotazione
+                );
+
+        if (!risultato) {
+
+            mostraAlert(
+                    "Prenotazione",
+                    "Sala non disponibile oppure capienza insufficiente."
+            );
+
+            return;
+        }
+
+
+        mostraAlert(
+                "Prenotazione",
+                "Prenotazione salvata correttamente."
+        );
 
         caricaPrenotazioni();
+        pulisciCampi();
     }
+
 
     @FXML
     private void modificaPrenotazione() {
-    	PrenotazioneEvento selezionata =
-    	        prenotazioniTable.getSelectionModel().getSelectedItem();
-    	if (selezionata == null) {
-    	    mostraAlert("Attenzione", "Seleziona una prenotazione.");
-    	    return;
-    	}
 
-    	if (selezionata != null) {
-    	    selezionata.setIdCliente(Integer.parseInt(clienteField.getText()));
-    	    selezionata.setIdSala(Integer.parseInt(salaComboBox.getValue()));
-    	    selezionata.setDataEvento(dataPicker.getValue().toString());
-    	    selezionata.setNumeroPartecipanti(Integer.parseInt(partecipantiField.getText()));
+        PrenotazioneEvento selezionata =
+                prenotazioniTable
+                        .getSelectionModel()
+                        .getSelectedItem();
 
-    	    prenotazioneDAO.modificaPrenotazione(selezionata);
+        if (selezionata == null) {
 
-    	    caricaPrenotazioni();
+            mostraAlert(
+                    "Attenzione",
+                    "Seleziona una prenotazione."
+            );
 
+            return;
+        }
 
 
-    	}
+        if (clienteField.getText().isEmpty()
+                || salaComboBox.getValue() == null
+                || dataPicker.getValue() == null
+                || partecipantiField.getText().isEmpty()) {
 
+            mostraAlert(
+                    "Attenzione",
+                    "Compila tutti i campi."
+            );
+
+            return;
+        }
+
+
+        try {
+
+            selezionata.setIdCliente(
+                    Integer.parseInt(
+                            clienteField.getText()
+                    )
+            );
+
+            selezionata.setIdSala(
+                    Integer.parseInt(
+                            salaComboBox.getValue()
+                    )
+            );
+
+            selezionata.setDataEvento(
+                    dataPicker.getValue().toString()
+            );
+
+            selezionata.setNumeroPartecipanti(
+                    Integer.parseInt(
+                            partecipantiField.getText()
+                    )
+            );
+
+        } catch (NumberFormatException e) {
+
+            mostraAlert(
+                    "Attenzione",
+                    "Inserisci valori numerici validi."
+            );
+
+            return;
+        }
+
+
+        boolean risultato =
+                facade.modificaPrenotazione(
+                        selezionata
+                );
+
+        if (!risultato) {
+
+            mostraAlert(
+                    "Modifica",
+                    "Impossibile modificare la prenotazione."
+            );
+
+            return;
+        }
+
+
+        mostraAlert(
+                "Modifica",
+                "Prenotazione modificata correttamente."
+        );
+
+        caricaPrenotazioni();
+        pulisciCampi();
     }
+
 
     @FXML
     private void eliminaPrenotazione() {
-    	PrenotazioneEvento selezionata =
-    	        prenotazioniTable.getSelectionModel().getSelectedItem();
 
-    	if (selezionata != null) {
-    	    prenotazioneDAO.eliminaPrenotazione(selezionata.getIdPrenotazione());
-    	    caricaPrenotazioni();
-    	    System.out.println("Prenotazione evento eliminata.");
-    	}
+        PrenotazioneEvento selezionata =
+                prenotazioniTable
+                        .getSelectionModel()
+                        .getSelectedItem();
+
+        if (selezionata == null) {
+
+            mostraAlert(
+                    "Attenzione",
+                    "Seleziona una prenotazione."
+            );
+
+            return;
+        }
+
+
+        facade.eliminaPrenotazione(
+                selezionata.getIdPrenotazione()
+        );
+
+
+        mostraAlert(
+                "Prenotazione",
+                "Prenotazione eliminata."
+        );
+
+        caricaPrenotazioni();
+        pulisciCampi();
     }
+
+
+    private void pulisciCampi() {
+
+        clienteField.clear();
+        salaComboBox.setValue(null);
+        dataPicker.setValue(null);
+        partecipantiField.clear();
+
+        prenotazioniTable
+                .getSelectionModel()
+                .clearSelection();
+    }
+
+
     @FXML
     private void tornaHome() {
-        try {
-            File fileFXML = new File("view/HomeManagerView.fxml");
-            Parent root = FXMLLoader.load(fileFXML.toURI().toURL());
 
-            Stage stage = (Stage) indietroButton.getScene().getWindow();
-            Scene scene = new Scene(root);
+        try {
+
+            File fileFXML =
+                    new File(
+                            "view/HomeManagerView.fxml"
+                    );
+
+            Parent root =
+                    FXMLLoader.load(
+                            fileFXML.toURI().toURL()
+                    );
+
+            Stage stage =
+                    (Stage) indietroButton
+                            .getScene()
+                            .getWindow();
+
+            Scene scene =
+                    new Scene(root);
 
             stage.setScene(scene);
-            stage.setTitle("ARS Ristorante - MANAGER");
+
+            stage.setTitle(
+                    "ARS Ristorante - MANAGER"
+            );
+
         } catch (Exception e) {
-            System.out.println("Errore ritorno Home Manager:");
+
+            System.out.println(
+                    "Errore ritorno Home Manager:"
+            );
+
             e.printStackTrace();
         }
     }
-        private void mostraAlert(String titolo, String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+
+    private void mostraAlert(
+            String titolo,
+            String messaggio) {
+
+        Alert alert =
+                new Alert(
+                        Alert.AlertType.INFORMATION
+                );
+
         alert.setTitle(titolo);
         alert.setHeaderText(null);
         alert.setContentText(messaggio);
         alert.showAndWait();
     }
-    }
-    
+}
