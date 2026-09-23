@@ -3,12 +3,14 @@ package test;
 import java.util.List;
 
 import dao.OrdineFornitoreDAO;
+import dao.impl.OrdineFornitoreDAOImpl;
 import model.OrdineFornitore;
 
 public class TestOrdineFornitoreDAO {
 
     public static void main(String[] args) {
-        OrdineFornitoreDAO dao = new OrdineFornitoreDAO();
+    	OrdineFornitoreDAO dao =
+    	        new OrdineFornitoreDAOImpl();
 
         List<OrdineFornitore> ordini = dao.getTuttiOrdiniFornitore();
 

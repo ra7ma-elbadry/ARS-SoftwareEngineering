@@ -4,12 +4,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 import dao.OrdineFornitoreDAO;
+import dao.impl.OrdineFornitoreDAOImpl;
 import model.OrdineFornitore;
 
 public class TestOrdineFornitoreCRUD {
 
     public static void main(String[] args) {
-        OrdineFornitoreDAO dao = new OrdineFornitoreDAO();
+    	OrdineFornitoreDAO dao =
+    	        new OrdineFornitoreDAOImpl();
 
         // 1. Aggiunta ordine fornitore
         OrdineFornitore nuovoOrdine = new OrdineFornitore();

@@ -3,12 +3,13 @@ package test;
 import java.util.List;
 
 import dao.FornitoreDAO;
+import dao.impl.FornitoreDAOImpl;
 import model.Fornitore;
 
 public class TestFornitoreDAO {
 
     public static void main(String[] args) {
-        FornitoreDAO dao = new FornitoreDAO();
+    	FornitoreDAO dao = new FornitoreDAOImpl();
 
         List<Fornitore> fornitori = dao.getTuttiFornitori();
 

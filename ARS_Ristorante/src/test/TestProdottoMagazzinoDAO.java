@@ -3,12 +3,14 @@ package test;
 import java.util.List;
 
 import dao.ProdottoMagazzinoDAO;
+import dao.impl.ProdottoMagazzinoDAOImpl;
 import model.ProdottoMagazzino;
 
 public class TestProdottoMagazzinoDAO {
 
     public static void main(String[] args) {
-        ProdottoMagazzinoDAO dao = new ProdottoMagazzinoDAO();
+    	ProdottoMagazzinoDAO dao =
+    	        new ProdottoMagazzinoDAOImpl();
 
         List<ProdottoMagazzino> prodotti = dao.getTuttiProdotti();
 

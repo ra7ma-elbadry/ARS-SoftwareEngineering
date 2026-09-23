@@ -2,8 +2,7 @@ package controller;
 
 import java.io.File;
 
-import dao.FornitoreDAO;
-import dao.ProdottoMagazzinoDAO;
+import facade.GestioneMagazzinoFacade;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,11 +21,15 @@ import model.ProdottoMagazzino;
 
 public class GestioneMagazzinoController {
 
-    private ProdottoMagazzinoDAO prodottoDAO = new ProdottoMagazzinoDAO();
-    private FornitoreDAO fornitoreDAO = new FornitoreDAO();
-    
+    private final GestioneMagazzinoFacade facade =
+            new GestioneMagazzinoFacade();
+
     @FXML
     private Button indietroButton;
+
+    // =========================
+    // PRODOTTI
+    // =========================
 
     @FXML
     private TableView<ProdottoMagazzino> tabellaProdotti;
@@ -64,6 +67,10 @@ public class GestioneMagazzinoController {
     @FXML
     private TextField sogliaMinimaProdottoField;
 
+    // =========================
+    // FORNITORI
+    // =========================
+
     @FXML
     private TableView<Fornitore> tabellaFornitori;
 
@@ -94,133 +101,312 @@ public class GestioneMagazzinoController {
     @FXML
     private TextField indirizzoFornitoreField;
 
+    // =========================
+    // INITIALIZE
+    // =========================
+
     @FXML
     public void initialize() {
+
         inizializzaTabellaProdotti();
         inizializzaTabellaFornitori();
 
         caricaProdotti();
         caricaFornitori();
 
-        tabellaProdotti.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, prodottoSelezionato) -> mostraProdottoSelezionato(prodottoSelezionato)
-        );
+        tabellaProdotti
+                .getSelectionModel()
+                .selectedItemProperty()
+                .addListener(
+                        (observable, oldValue, prodottoSelezionato) ->
+                                mostraProdottoSelezionato(prodottoSelezionato)
+                );
 
-        tabellaFornitori.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, fornitoreSelezionato) -> mostraFornitoreSelezionato(fornitoreSelezionato)
-        );
+        tabellaFornitori
+                .getSelectionModel()
+                .selectedItemProperty()
+                .addListener(
+                        (observable, oldValue, fornitoreSelezionato) ->
+                                mostraFornitoreSelezionato(fornitoreSelezionato)
+                );
     }
 
+    // =========================
+    // INIZIALIZZAZIONE TABELLE
+    // =========================
+
     private void inizializzaTabellaProdotti() {
-        colIdProdotto.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colNomeProdotto.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        colDescrizioneProdotto.setCellValueFactory(new PropertyValueFactory<>("descrizione"));
-        colQuantitaProdotto.setCellValueFactory(new PropertyValueFactory<>("quantita"));
-        colUnitaMisuraProdotto.setCellValueFactory(new PropertyValueFactory<>("unitaMisura"));
-        colSogliaMinimaProdotto.setCellValueFactory(new PropertyValueFactory<>("sogliaMinima"));
+
+        colIdProdotto.setCellValueFactory(
+                new PropertyValueFactory<>("id")
+        );
+
+        colNomeProdotto.setCellValueFactory(
+                new PropertyValueFactory<>("nome")
+        );
+
+        colDescrizioneProdotto.setCellValueFactory(
+                new PropertyValueFactory<>("descrizione")
+        );
+
+        colQuantitaProdotto.setCellValueFactory(
+                new PropertyValueFactory<>("quantita")
+        );
+
+        colUnitaMisuraProdotto.setCellValueFactory(
+                new PropertyValueFactory<>("unitaMisura")
+        );
+
+        colSogliaMinimaProdotto.setCellValueFactory(
+                new PropertyValueFactory<>("sogliaMinima")
+        );
     }
 
     private void inizializzaTabellaFornitori() {
-        colIdFornitore.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colNomeFornitore.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        colTelefonoFornitore.setCellValueFactory(new PropertyValueFactory<>("telefono"));
-        colEmailFornitore.setCellValueFactory(new PropertyValueFactory<>("email"));
-        colIndirizzoFornitore.setCellValueFactory(new PropertyValueFactory<>("indirizzo"));
+
+        colIdFornitore.setCellValueFactory(
+                new PropertyValueFactory<>("id")
+        );
+
+        colNomeFornitore.setCellValueFactory(
+                new PropertyValueFactory<>("nome")
+        );
+
+        colTelefonoFornitore.setCellValueFactory(
+                new PropertyValueFactory<>("telefono")
+        );
+
+        colEmailFornitore.setCellValueFactory(
+                new PropertyValueFactory<>("email")
+        );
+
+        colIndirizzoFornitore.setCellValueFactory(
+                new PropertyValueFactory<>("indirizzo")
+        );
     }
 
+    // =========================
+    // CARICAMENTO DATI
+    // =========================
+
     private void caricaProdotti() {
+
         ObservableList<ProdottoMagazzino> prodotti =
-                FXCollections.observableArrayList(prodottoDAO.getTuttiProdotti());
+                FXCollections.observableArrayList(
+                        facade.getTuttiProdotti()
+                );
 
         tabellaProdotti.setItems(prodotti);
     }
 
     private void caricaFornitori() {
+
         ObservableList<Fornitore> fornitori =
-                FXCollections.observableArrayList(fornitoreDAO.getTuttiFornitori());
+                FXCollections.observableArrayList(
+                        facade.getTuttiFornitori()
+                );
 
         tabellaFornitori.setItems(fornitori);
     }
 
-    private void mostraProdottoSelezionato(ProdottoMagazzino prodotto) {
-        if (prodotto != null) {
-            nomeProdottoField.setText(prodotto.getNome());
-            descrizioneProdottoField.setText(prodotto.getDescrizione());
-            quantitaProdottoField.setText(String.valueOf(prodotto.getQuantita()));
-            unitaMisuraProdottoField.setText(prodotto.getUnitaMisura());
-            sogliaMinimaProdottoField.setText(String.valueOf(prodotto.getSogliaMinima()));
+    // =========================
+    // SELEZIONE PRODOTTO
+    // =========================
+
+    private void mostraProdottoSelezionato(
+            ProdottoMagazzino prodotto) {
+
+        if (prodotto == null) {
+            return;
         }
+
+        nomeProdottoField.setText(
+                prodotto.getNome()
+        );
+
+        descrizioneProdottoField.setText(
+                prodotto.getDescrizione()
+        );
+
+        quantitaProdottoField.setText(
+                String.valueOf(prodotto.getQuantita())
+        );
+
+        unitaMisuraProdottoField.setText(
+                prodotto.getUnitaMisura()
+        );
+
+        sogliaMinimaProdottoField.setText(
+                String.valueOf(prodotto.getSogliaMinima())
+        );
     }
 
-    private void mostraFornitoreSelezionato(Fornitore fornitore) {
-        if (fornitore != null) {
-            nomeFornitoreField.setText(fornitore.getNome());
-            telefonoFornitoreField.setText(fornitore.getTelefono());
-            emailFornitoreField.setText(fornitore.getEmail());
-            indirizzoFornitoreField.setText(fornitore.getIndirizzo());
+    // =========================
+    // SELEZIONE FORNITORE
+    // =========================
+
+    private void mostraFornitoreSelezionato(
+            Fornitore fornitore) {
+
+        if (fornitore == null) {
+            return;
         }
+
+        nomeFornitoreField.setText(
+                fornitore.getNome()
+        );
+
+        telefonoFornitoreField.setText(
+                fornitore.getTelefono()
+        );
+
+        emailFornitoreField.setText(
+                fornitore.getEmail()
+        );
+
+        indirizzoFornitoreField.setText(
+                fornitore.getIndirizzo()
+        );
     }
+
+    // =========================
+    // AGGIUNGI PRODOTTO
+    // =========================
 
     @FXML
     private void aggiungiProdotto() {
+
         try {
-            ProdottoMagazzino prodotto = new ProdottoMagazzino();
 
-            prodotto.setNome(nomeProdottoField.getText());
-            prodotto.setDescrizione(descrizioneProdottoField.getText());
-            prodotto.setQuantita(Double.parseDouble(quantitaProdottoField.getText()));
-            prodotto.setUnitaMisura(unitaMisuraProdottoField.getText());
-            prodotto.setSogliaMinima(Double.parseDouble(sogliaMinimaProdottoField.getText()));
+            ProdottoMagazzino prodotto =
+                    new ProdottoMagazzino();
 
-            prodottoDAO.aggiungiProdotto(prodotto);
+            prodotto.setNome(
+                    nomeProdottoField.getText()
+            );
+
+            prodotto.setDescrizione(
+                    descrizioneProdottoField.getText()
+            );
+
+            prodotto.setQuantita(
+                    Double.parseDouble(
+                            quantitaProdottoField.getText()
+                    )
+            );
+
+            prodotto.setUnitaMisura(
+                    unitaMisuraProdottoField.getText()
+            );
+
+            prodotto.setSogliaMinima(
+                    Double.parseDouble(
+                            sogliaMinimaProdottoField.getText()
+                    )
+            );
+
+            facade.aggiungiProdotto(
+                    prodotto
+            );
+
             caricaProdotti();
             pulisciCampiProdotto();
 
         } catch (Exception e) {
-            System.out.println("Errore aggiunta prodotto");
+
+            System.out.println(
+                    "Errore aggiunta prodotto"
+            );
+
             e.printStackTrace();
         }
     }
+
+    // =========================
+    // AGGIORNA PRODOTTO
+    // =========================
 
     @FXML
     private void aggiornaProdotto() {
-        ProdottoMagazzino prodottoSelezionato = tabellaProdotti.getSelectionModel().getSelectedItem();
+
+        ProdottoMagazzino prodottoSelezionato =
+                tabellaProdotti
+                        .getSelectionModel()
+                        .getSelectedItem();
 
         if (prodottoSelezionato == null) {
             return;
         }
 
         try {
-            prodottoSelezionato.setNome(nomeProdottoField.getText());
-            prodottoSelezionato.setDescrizione(descrizioneProdottoField.getText());
-            prodottoSelezionato.setQuantita(Double.parseDouble(quantitaProdottoField.getText()));
-            prodottoSelezionato.setUnitaMisura(unitaMisuraProdottoField.getText());
-            prodottoSelezionato.setSogliaMinima(Double.parseDouble(sogliaMinimaProdottoField.getText()));
 
-            prodottoDAO.aggiornaProdotto(prodottoSelezionato);
+            prodottoSelezionato.setNome(
+                    nomeProdottoField.getText()
+            );
+
+            prodottoSelezionato.setDescrizione(
+                    descrizioneProdottoField.getText()
+            );
+
+            prodottoSelezionato.setQuantita(
+                    Double.parseDouble(
+                            quantitaProdottoField.getText()
+                    )
+            );
+
+            prodottoSelezionato.setUnitaMisura(
+                    unitaMisuraProdottoField.getText()
+            );
+
+            prodottoSelezionato.setSogliaMinima(
+                    Double.parseDouble(
+                            sogliaMinimaProdottoField.getText()
+                    )
+            );
+
+            facade.aggiornaProdotto(
+                    prodottoSelezionato
+            );
+
             caricaProdotti();
             pulisciCampiProdotto();
 
         } catch (Exception e) {
-            System.out.println("Errore aggiornamento prodotto");
+
+            System.out.println(
+                    "Errore aggiornamento prodotto"
+            );
+
             e.printStackTrace();
         }
     }
 
+    // =========================
+    // ELIMINA PRODOTTO
+    // =========================
+
     @FXML
     private void eliminaProdotto() {
-        ProdottoMagazzino prodottoSelezionato = tabellaProdotti.getSelectionModel().getSelectedItem();
+
+        ProdottoMagazzino prodottoSelezionato =
+                tabellaProdotti
+                        .getSelectionModel()
+                        .getSelectedItem();
 
         if (prodottoSelezionato == null) {
             return;
         }
 
-        prodottoDAO.eliminaProdotto(prodottoSelezionato.getId());
+        facade.eliminaProdotto(
+                prodottoSelezionato.getId()
+        );
+
         caricaProdotti();
         pulisciCampiProdotto();
     }
 
     private void pulisciCampiProdotto() {
+
         nomeProdottoField.clear();
         descrizioneProdottoField.clear();
         quantitaProdottoField.clear();
@@ -228,101 +414,237 @@ public class GestioneMagazzinoController {
         sogliaMinimaProdottoField.clear();
     }
 
+    // =========================
+    // AGGIUNGI FORNITORE
+    // =========================
+
     @FXML
     private void aggiungiFornitore() {
-        Fornitore fornitore = new Fornitore();
 
-        fornitore.setNome(nomeFornitoreField.getText());
-        fornitore.setTelefono(telefonoFornitoreField.getText());
-        fornitore.setEmail(emailFornitoreField.getText());
-        fornitore.setIndirizzo(indirizzoFornitoreField.getText());
+        Fornitore fornitore =
+                new Fornitore();
 
-        fornitoreDAO.aggiungiFornitore(fornitore);
+        fornitore.setNome(
+                nomeFornitoreField.getText()
+        );
+
+        fornitore.setTelefono(
+                telefonoFornitoreField.getText()
+        );
+
+        fornitore.setEmail(
+                emailFornitoreField.getText()
+        );
+
+        fornitore.setIndirizzo(
+                indirizzoFornitoreField.getText()
+        );
+
+        facade.aggiungiFornitore(
+                fornitore
+        );
+
         caricaFornitori();
         pulisciCampiFornitore();
     }
+
+    // =========================
+    // AGGIORNA FORNITORE
+    // =========================
 
     @FXML
     private void aggiornaFornitore() {
-        Fornitore fornitoreSelezionato = tabellaFornitori.getSelectionModel().getSelectedItem();
+
+        Fornitore fornitoreSelezionato =
+                tabellaFornitori
+                        .getSelectionModel()
+                        .getSelectedItem();
 
         if (fornitoreSelezionato == null) {
             return;
         }
 
-        fornitoreSelezionato.setNome(nomeFornitoreField.getText());
-        fornitoreSelezionato.setTelefono(telefonoFornitoreField.getText());
-        fornitoreSelezionato.setEmail(emailFornitoreField.getText());
-        fornitoreSelezionato.setIndirizzo(indirizzoFornitoreField.getText());
+        fornitoreSelezionato.setNome(
+                nomeFornitoreField.getText()
+        );
 
-        fornitoreDAO.aggiornaFornitore(fornitoreSelezionato);
+        fornitoreSelezionato.setTelefono(
+                telefonoFornitoreField.getText()
+        );
+
+        fornitoreSelezionato.setEmail(
+                emailFornitoreField.getText()
+        );
+
+        fornitoreSelezionato.setIndirizzo(
+                indirizzoFornitoreField.getText()
+        );
+
+        facade.aggiornaFornitore(
+                fornitoreSelezionato
+        );
+
         caricaFornitori();
         pulisciCampiFornitore();
     }
+
+    // =========================
+    // ELIMINA FORNITORE
+    // =========================
 
     @FXML
     private void eliminaFornitore() {
-        Fornitore fornitoreSelezionato = tabellaFornitori.getSelectionModel().getSelectedItem();
+
+        Fornitore fornitoreSelezionato =
+                tabellaFornitori
+                        .getSelectionModel()
+                        .getSelectedItem();
 
         if (fornitoreSelezionato == null) {
             return;
         }
 
-        fornitoreDAO.eliminaFornitore(fornitoreSelezionato.getId());
+        facade.eliminaFornitore(
+                fornitoreSelezionato.getId()
+        );
+
         caricaFornitori();
         pulisciCampiFornitore();
     }
+
+    // =========================
+    // CREA ORDINE FORNITORE
+    // =========================
+
     @FXML
     private void creaOrdineFornitore() {
-        Fornitore fornitoreSelezionato = tabellaFornitori.getSelectionModel().getSelectedItem();
+
+        Fornitore fornitoreSelezionato =
+                tabellaFornitori
+                        .getSelectionModel()
+                        .getSelectedItem();
 
         if (fornitoreSelezionato == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Attenzione");
-            alert.setHeaderText(null);
-            alert.setContentText("Seleziona prima un fornitore dalla tabella.");
+
+            Alert alert =
+                    new Alert(
+                            Alert.AlertType.WARNING
+                    );
+
+            alert.setTitle(
+                    "Attenzione"
+            );
+
+            alert.setHeaderText(
+                    null
+            );
+
+            alert.setContentText(
+                    "Seleziona prima un fornitore dalla tabella."
+            );
+
             alert.showAndWait();
+
             return;
         }
 
         try {
-            CreaOrdineFornitoreController.setFornitoreSelezionato(fornitoreSelezionato);
 
-            File fileFXML = new File("view/CreaOrdineFornitoreView.fxml");
-            Parent root = FXMLLoader.load(fileFXML.toURI().toURL());
+            File fileFXML =
+                    new File(
+                            "view/CreaOrdineFornitoreView.fxml"
+                    );
 
-            Stage stage = (Stage) tabellaFornitori.getScene().getWindow();
-            Scene scene = new Scene(root);
+            FXMLLoader loader =
+                    new FXMLLoader(
+                            fileFXML.toURI().toURL()
+                    );
 
-            stage.setScene(scene);
-            stage.setTitle("ARS Ristorante - Crea Ordine Fornitore");
+            Parent root =
+                    loader.load();
+
+            CreaOrdineFornitoreController controller =
+                    loader.getController();
+
+            controller.setFornitoreSelezionato(
+                    fornitoreSelezionato
+            );
+
+            Stage stage =
+                    (Stage) tabellaFornitori
+                            .getScene()
+                            .getWindow();
+
+            Scene scene =
+                    new Scene(root);
+
+            stage.setScene(
+                    scene
+            );
+
+            stage.setTitle(
+                    "ARS Ristorante - Crea Ordine Fornitore"
+            );
 
         } catch (Exception e) {
-            System.out.println("Errore apertura Crea Ordine Fornitore");
+
+            System.out.println(
+                    "Errore apertura Crea Ordine Fornitore"
+            );
+
             e.printStackTrace();
         }
     }
 
     private void pulisciCampiFornitore() {
+
         nomeFornitoreField.clear();
         telefonoFornitoreField.clear();
         emailFornitoreField.clear();
         indirizzoFornitoreField.clear();
     }
+
+    // =========================
+    // TORNA HOME MANAGER
+    // =========================
+
     @FXML
     private void tornaHomeManager() {
+
         try {
-            File fileFXML = new File("view/HomeManagerView.fxml");
-            Parent root = FXMLLoader.load(fileFXML.toURI().toURL());
 
-            Stage stage = (Stage) indietroButton.getScene().getWindow();
-            Scene scene = new Scene(root);
+            File fileFXML =
+                    new File(
+                            "view/HomeManagerView.fxml"
+                    );
 
-            stage.setScene(scene);
-            stage.setTitle("ARS Ristorante - Home Manager");
+            Parent root =
+                    FXMLLoader.load(
+                            fileFXML.toURI().toURL()
+                    );
+
+            Stage stage =
+                    (Stage) indietroButton
+                            .getScene()
+                            .getWindow();
+
+            Scene scene =
+                    new Scene(root);
+
+            stage.setScene(
+                    scene
+            );
+
+            stage.setTitle(
+                    "ARS Ristorante - Home Manager"
+            );
 
         } catch (Exception e) {
-            System.out.println("Errore ritorno Home Manager");
+
+            System.out.println(
+                    "Errore ritorno Home Manager"
+            );
+
             e.printStackTrace();
         }
     }

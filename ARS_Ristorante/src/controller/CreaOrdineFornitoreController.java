@@ -1,11 +1,9 @@
 package controller;
 
 import java.io.File;
-import java.time.LocalDate;
 
-import dao.DettaglioOrdineFornitoreDAO;
-import dao.OrdineFornitoreDAO;
-import dao.ProdottoMagazzinoDAO;
+import application.SessioneUtente;
+import facade.GestioneMagazzinoFacade;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,19 +20,18 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.DettaglioOrdineFornitore;
 import model.Fornitore;
-import model.OrdineFornitore;
 import model.OrdineFornitoreVisualizzato;
 import model.ProdottoMagazzino;
 
 public class CreaOrdineFornitoreController {
 
-    private static Fornitore fornitoreSelezionato;
+    private Fornitore fornitoreSelezionato;
 
-    private ProdottoMagazzinoDAO prodottoDAO = new ProdottoMagazzinoDAO();
-    private OrdineFornitoreDAO ordineDAO = new OrdineFornitoreDAO();
-    private DettaglioOrdineFornitoreDAO dettaglioDAO = new DettaglioOrdineFornitoreDAO();
+    private GestioneMagazzinoFacade facade =
+            new GestioneMagazzinoFacade();
 
-    private ObservableList<DettaglioOrdineFornitore> dettagliOrdine = FXCollections.observableArrayList();
+    private ObservableList<DettaglioOrdineFornitore> dettagliOrdine =
+            FXCollections.observableArrayList();
 
     @FXML
     private Label fornitoreLabel;
@@ -81,144 +78,292 @@ public class CreaOrdineFornitoreController {
     @FXML
     private TableColumn<OrdineFornitoreVisualizzato, Double> colPrezzoOrdineInviato;
 
-    public static void setFornitoreSelezionato(Fornitore fornitore) {
-        fornitoreSelezionato = fornitore;
-    }
-
     @FXML
     public void initialize() {
-        if (fornitoreSelezionato != null) {
-            fornitoreLabel.setText("Fornitore: " + fornitoreSelezionato.getNome());
-        }
 
         prodottoComboBox.setItems(
-                FXCollections.observableArrayList(prodottoDAO.getTuttiProdotti())
+                FXCollections.observableArrayList(
+                        facade.getTuttiProdotti()
+                )
         );
 
-        colProdotto.setCellValueFactory(new PropertyValueFactory<>("idProdotto"));
-        colQuantita.setCellValueFactory(new PropertyValueFactory<>("quantita"));
-        colPrezzoUnitario.setCellValueFactory(new PropertyValueFactory<>("prezzoUnitario"));
+        colProdotto.setCellValueFactory(
+                new PropertyValueFactory<>("idProdotto")
+        );
+
+        colQuantita.setCellValueFactory(
+                new PropertyValueFactory<>("quantita")
+        );
+
+        colPrezzoUnitario.setCellValueFactory(
+                new PropertyValueFactory<>("prezzoUnitario")
+        );
 
         tabellaDettagli.setItems(dettagliOrdine);
 
         inizializzaTabellaOrdiniInviati();
+    }
+
+    public void setFornitoreSelezionato(Fornitore fornitore) {
+
+        this.fornitoreSelezionato = fornitore;
+
+        if (fornitoreLabel != null && fornitore != null) {
+            fornitoreLabel.setText(
+                    "Fornitore: " + fornitore.getNome()
+            );
+        }
+
         caricaOrdiniInviati();
     }
 
     private void inizializzaTabellaOrdiniInviati() {
+
         if (tabellaOrdiniInviati == null) {
             return;
         }
 
-        colIdOrdineInviato.setCellValueFactory(new PropertyValueFactory<>("idOrdine"));
-        colDataOrdineInviato.setCellValueFactory(new PropertyValueFactory<>("dataOrdine"));
-        colStatoOrdineInviato.setCellValueFactory(new PropertyValueFactory<>("stato"));
-        colProdottoOrdineInviato.setCellValueFactory(new PropertyValueFactory<>("nomeProdotto"));
-        colQuantitaOrdineInviato.setCellValueFactory(new PropertyValueFactory<>("quantita"));
-        colPrezzoOrdineInviato.setCellValueFactory(new PropertyValueFactory<>("prezzoUnitario"));
+        colIdOrdineInviato.setCellValueFactory(
+                new PropertyValueFactory<>("idOrdine")
+        );
+
+        colDataOrdineInviato.setCellValueFactory(
+                new PropertyValueFactory<>("dataOrdine")
+        );
+
+        colStatoOrdineInviato.setCellValueFactory(
+                new PropertyValueFactory<>("stato")
+        );
+
+        colProdottoOrdineInviato.setCellValueFactory(
+                new PropertyValueFactory<>("nomeProdotto")
+        );
+
+        colQuantitaOrdineInviato.setCellValueFactory(
+                new PropertyValueFactory<>("quantita")
+        );
+
+        colPrezzoOrdineInviato.setCellValueFactory(
+                new PropertyValueFactory<>("prezzoUnitario")
+        );
     }
 
     @FXML
     private void aggiungiDettaglio() {
-        ProdottoMagazzino prodotto = prodottoComboBox.getSelectionModel().getSelectedItem();
+
+        ProdottoMagazzino prodotto =
+                prodottoComboBox
+                        .getSelectionModel()
+                        .getSelectedItem();
 
         if (prodotto == null) {
-            mostraMessaggio("Attenzione", "Seleziona un prodotto.");
+            mostraMessaggio(
+                    "Attenzione",
+                    "Seleziona un prodotto."
+            );
             return;
         }
 
         try {
-            double quantita = Double.parseDouble(quantitaField.getText());
-            double prezzoUnitario = Double.parseDouble(prezzoUnitarioField.getText());
 
-            DettaglioOrdineFornitore dettaglio = new DettaglioOrdineFornitore();
-            dettaglio.setIdProdotto(prodotto.getId());
-            dettaglio.setQuantita(quantita);
-            dettaglio.setPrezzoUnitario(prezzoUnitario);
+            double quantita =
+                    Double.parseDouble(
+                            quantitaField.getText()
+                    );
 
-            dettagliOrdine.add(dettaglio);
+            double prezzoUnitario =
+                    Double.parseDouble(
+                            prezzoUnitarioField.getText()
+                    );
+
+            if (quantita <= 0 || prezzoUnitario <= 0) {
+                mostraMessaggio(
+                        "Errore",
+                        "Quantità e prezzo devono essere maggiori di zero."
+                );
+                return;
+            }
+
+            DettaglioOrdineFornitore dettaglio =
+                    new DettaglioOrdineFornitore();
+
+            dettaglio.setIdProdotto(
+                    prodotto.getId()
+            );
+
+            dettaglio.setQuantita(
+                    quantita
+            );
+
+            dettaglio.setPrezzoUnitario(
+                    prezzoUnitario
+            );
+
+            dettagliOrdine.add(
+                    dettaglio
+            );
 
             quantitaField.clear();
             prezzoUnitarioField.clear();
-            prodottoComboBox.getSelectionModel().clearSelection();
 
-        } catch (Exception e) {
-            mostraMessaggio("Errore", "Inserisci valori numerici validi per quantità e prezzo.");
+            prodottoComboBox
+                    .getSelectionModel()
+                    .clearSelection();
+
+        } catch (NumberFormatException e) {
+
+            mostraMessaggio(
+                    "Errore",
+                    "Inserisci valori numerici validi per quantità e prezzo."
+            );
         }
     }
 
     @FXML
     private void inviaOrdine() {
+
         if (fornitoreSelezionato == null) {
-            mostraMessaggio("Errore", "Nessun fornitore selezionato.");
+
+            mostraMessaggio(
+                    "Errore",
+                    "Nessun fornitore selezionato."
+            );
+
             return;
         }
 
         if (dettagliOrdine.isEmpty()) {
-            mostraMessaggio("Attenzione", "Aggiungi almeno un prodotto all'ordine.");
+
+            mostraMessaggio(
+                    "Attenzione",
+                    "Aggiungi almeno un prodotto all'ordine."
+            );
+
             return;
         }
 
-        OrdineFornitore ordine = new OrdineFornitore();
-        ordine.setIdFornitore(fornitoreSelezionato.getId());
-        ordine.setIdManager(3);
-        ordine.setDataOrdine(LocalDate.now());
-        ordine.setStato("INVIATO");
+        int idManager =
+                SessioneUtente
+                        .getInstance()
+                        .getIdUtente();
 
-        int idOrdineCreato = ordineDAO.creaOrdineERestituisciId(ordine);
+        if (idManager == -1) {
+
+            mostraMessaggio(
+                    "Errore",
+                    "Nessun utente autenticato."
+            );
+
+            return;
+        }
+
+        int idOrdineCreato =
+                facade.creaOrdineFornitore(
+                        fornitoreSelezionato.getId(),
+                        idManager,
+                        dettagliOrdine
+                );
 
         if (idOrdineCreato == -1) {
-            mostraMessaggio("Errore", "Errore durante la creazione dell'ordine.");
+
+            mostraMessaggio(
+                    "Errore",
+                    "Errore durante la creazione dell'ordine."
+            );
+
             return;
         }
 
-        for (DettaglioOrdineFornitore dettaglio : dettagliOrdine) {
-            dettaglio.setIdOrdineFornitore(idOrdineCreato);
-            dettaglioDAO.aggiungiDettaglio(dettaglio);
-        }
-
-        mostraMessaggio("Ordine inviato", "Ordine inviato correttamente al fornitore.");
+        mostraMessaggio(
+                "Ordine inviato",
+                "Ordine inviato correttamente al fornitore."
+        );
 
         dettagliOrdine.clear();
+
         caricaOrdiniInviati();
     }
 
     private void caricaOrdiniInviati() {
-        if (tabellaOrdiniInviati == null || fornitoreSelezionato == null) {
+
+        if (tabellaOrdiniInviati == null
+                || fornitoreSelezionato == null) {
             return;
         }
 
         ObservableList<OrdineFornitoreVisualizzato> ordini =
                 FXCollections.observableArrayList(
-                        ordineDAO.getOrdiniVisualizzatiPerFornitore(fornitoreSelezionato.getId())
+                        facade
+                                .getOrdiniVisualizzatiPerFornitore(
+                                        fornitoreSelezionato.getId()
+                                )
                 );
 
-        tabellaOrdiniInviati.setItems(ordini);
+        tabellaOrdiniInviati.setItems(
+                ordini
+        );
     }
 
     @FXML
     private void tornaGestioneMagazzino() {
-        try {
-            File fileFXML = new File("view/GestioneMagazzinoView.fxml");
-            Parent root = FXMLLoader.load(fileFXML.toURI().toURL());
 
-            Stage stage = (Stage) tabellaDettagli.getScene().getWindow();
-            Scene scene = new Scene(root);
+        try {
+
+            File fileFXML =
+                    new File(
+                            "view/GestioneMagazzinoView.fxml"
+                    );
+
+            Parent root =
+                    FXMLLoader.load(
+                            fileFXML.toURI().toURL()
+                    );
+
+            Stage stage =
+                    (Stage) tabellaDettagli
+                            .getScene()
+                            .getWindow();
+
+            Scene scene =
+                    new Scene(root);
 
             stage.setScene(scene);
-            stage.setTitle("ARS Ristorante - Gestione Magazzino");
+
+            stage.setTitle(
+                    "ARS Ristorante - Gestione Magazzino"
+            );
 
         } catch (Exception e) {
-            System.out.println("Errore ritorno Gestione Magazzino");
+
+            System.out.println(
+                    "Errore ritorno Gestione Magazzino"
+            );
+
             e.printStackTrace();
         }
     }
 
-    private void mostraMessaggio(String titolo, String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titolo);
-        alert.setHeaderText(null);
-        alert.setContentText(messaggio);
+    private void mostraMessaggio(
+            String titolo,
+            String messaggio) {
+
+        Alert alert =
+                new Alert(
+                        Alert.AlertType.INFORMATION
+                );
+
+        alert.setTitle(
+                titolo
+        );
+
+        alert.setHeaderText(
+                null
+        );
+
+        alert.setContentText(
+                messaggio
+        );
+
         alert.showAndWait();
     }
 }
